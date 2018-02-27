@@ -1199,7 +1199,8 @@
     '"sh -c /bin/hostname -f 2> /dev/null"',
     '"sh -c locale -a"',
     '"sh -c  -t -i"',
-    '"sh -c openssl version"'
+    '"sh -c openssl version"',
+    '"bash -c id -Gn kafadmin"'
     ]
 
 # This list allows for easy additions to the set of commands allowed
