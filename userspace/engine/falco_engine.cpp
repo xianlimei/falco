@@ -84,7 +84,10 @@ void falco_engine::load_rules(const string &rules_content, bool verbose, bool al
 		throw falco_exception("No inspector provided");
 	}
 
-	m_sinsp_factory = make_shared<sinsp_filter_factory>(m_inspector);
+	if(!m_sinsp_factory)
+	{
+		m_sinsp_factory = make_shared<sinsp_filter_factory>(m_inspector);
+	}
 
 	if(!m_rules)
 	{
