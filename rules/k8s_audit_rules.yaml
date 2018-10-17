@@ -62,6 +62,12 @@
 - macro: configmap
   condition: ka.target.resource=configmaps
 
+- macro: namespace
+  condition: ka.target.resource=namespaces
+
+- macro: serviceaccount
+  condition: ka.target.resource=serviceaccounts
+
 - macro: health_endpoint
   condition: ka.uri=/healthz
 
@@ -165,11 +171,35 @@
   source: k8s_audit
   tags: [k8s]
 
-# Detect any activity in a namespace outside of a set of known namespaces.
+# In a local/user rules fie, you can append to this list to add additional allowed namespaces
+- list: allowed_namespaces
+  items: [kube-system, kube-public, default]
+
+- rule: Create Disallowed namespace
+  desc: Detect any attempt to create a namespace outside of a set of known namespaces
+  condition: kevt and namespace and create and not ka.target.name in (allowed_namespaces)
+  output: Disallowed namespace created (user=%ka.user.name ns=%ka.target.name)
+  priority: WARNING
+  source: k8s_audit
+  tags: [k8s]
 
 # Detect any new pod created in the kube-system namespace
+- rule: Pod Created in kube namespace
+  desc: Detect any attempt to create a pod in the kube-system or kube-public namespaces
+  condition: kevt and pod and create and ka.target.namespace in (kube-system, kube-public)
+  output: Pod created in kube namespace (user=%ka.user.name pod=%ka.resp.name ns=%ka.target.namespace image=%ka.req.container.image)
+  priority: WARNING
+  source: k8s_audit
+  tags: [k8s]
 
-# Detect creating a user or service account starting with "system:"
+# Detect creating a service account in the kube-system/kube-public namespace
+- rule: Service Account Created in kube namespace
+  desc: Detect any attempt to create a serviceaccount in the kube-system or kube-public namespaces
+  condition: kevt and serviceaccount and create and ka.target.namespace in (kube-system, kube-public)
+  output: Service account created in kube namespace (user=%ka.user.name serviceaccount=%ka.target.name ns=%ka.target.namespace)
+  priority: WARNING
+  source: k8s_audit
+  tags: [k8s]
 
 # Detect any modify/delete to any ClusterRole/ClusterRoleBinding starting with "system:"
 
@@ -228,6 +258,38 @@
   desc: Detect any attempt to delete a configmap
   condition: (kactivity and delete and configmap and response_successful)
   output: K8s ConfigMap Deleted (user=%ka.user.name configmap=%ka.target.name ns=%ka.target.namespace resp=%ka.response.code decision=%ka.auth.decision reason=%ka.auth.reason)
+  priority: INFO
+  source: k8s_audit
+  tags: [k8s]
+
+- rule: K8s Namespace Created
+  desc: Detect any attempt to create a namespace
+  condition: (kactivity and create and namespace and response_successful)
+  output: K8s Namespace Created (user=%ka.user.name namespace=%ka.target.name resp=%ka.response.code decision=%ka.auth.decision reason=%ka.auth.reason)
+  priority: INFO
+  source: k8s_audit
+  tags: [k8s]
+
+- rule: K8s Namespace Deleted
+  desc: Detect any attempt to delete a namespace
+  condition: (kactivity and non_system_user and delete and namespace and response_successful)
+  output: K8s Namespace Deleted (user=%ka.user.name namespace=%ka.target.name resp=%ka.response.code decision=%ka.auth.decision reason=%ka.auth.reason)
+  priority: INFO
+  source: k8s_audit
+  tags: [k8s]
+
+- rule: K8s Sericeaccount Created
+  desc: Detect any attempt to create a service account
+  condition: (kactivity and create and serviceaccount and response_successful)
+  output: K8s Sericeaccount Created (user=%ka.user.name user=%ka.target.name resp=%ka.response.code decision=%ka.auth.decision reason=%ka.auth.reason)
+  priority: INFO
+  source: k8s_audit
+  tags: [k8s]
+
+- rule: K8s Sericeaccount Deleted
+  desc: Detect any attempt to delete a service account
+  condition: (kactivity and delete and serviceaccount and response_successful)
+  output: K8s Sericeaccount Deleted (user=%ka.user.name user=%ka.target.name resp=%ka.response.code decision=%ka.auth.decision reason=%ka.auth.reason)
   priority: INFO
   source: k8s_audit
   tags: [k8s]
