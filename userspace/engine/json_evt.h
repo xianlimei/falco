@@ -209,6 +209,9 @@ public:
 	// Extract the value of the provided query parameter
 	static std::string index_query_param(const nlohmann::json &j, std::string &field, std::string &idx);
 
+	// Return true if an object in the provided array has a name property with idx as value
+	static std::string index_has_name(const nlohmann::json &j, std::string &field, std::string &idx);
+
 	// Return whether the ith container (or any container, if an
 	// index is not specified) is run privileged.
 	static std::string index_privileged(const nlohmann::json &j, std::string &field, std::string &idx);

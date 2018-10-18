@@ -410,6 +410,21 @@ std::string k8s_audit_filter_check::index_image(const json &j, std::string &fiel
 	return image;
 }
 
+std::string k8s_audit_filter_check::index_has_name(const json &j, std::string &field, std::string &idx)
+{
+	for(auto &subject : j)
+	{
+		fprintf(stderr, "foo2\n");
+		if(subject.value("name", "N/A") == idx)
+		{
+			return string("true");
+		}
+	}
+
+	return string("false");
+}
+
+
 std::string k8s_audit_filter_check::index_query_param(const json &j, std::string &field, std::string &idx)
 {
 	string uri = j;
@@ -533,11 +548,15 @@ k8s_audit_filter_check::k8s_audit_filter_check()
 			  {"ka.target.namespace", "The target object namespace"},
 			  {"ka.target.resource", "The target object resource"},
 			  {"ka.target.subresource", "The target object subresource"},
+			  {"ka.req.binding.subjects", "When the request object refers to a cluster role binding, the subject (e.g. account/users) being linked by the binding"},
+			  {"ka.req.binding.subject.has_name", "When the request object refers to a cluster role binding, return true if a subject with the provided name exists"},
+			  {"ka.req.binding.role", "When the request object refers to a cluster role binding, the role being linked by the binding"},
 			  {"ka.req.configmap.name", "If the request object refers to a configmap, the configmap name"},
 			  {"ka.req.configmap.obj", "If the request object refers to a configmap, the entire configmap object"},
 			  {"ka.req.container.image", "When the request object refers to a container, the container's images. Can be indexed (e.g. ka.req.container.image[0]). Without any index, returns the first image"},
 			  {"ka.req.container.image.repository", "The same as req.container.image, but only the repository part (e.g. sysdig/falco)"},
 			  {"ka.req.container.privileged", "When the request object refers to a container, whether or not any container is run privileged. With an index, return whether or not the ith container is run privileged."},
+			  {"ka.req.role.rules", "When the request object refers to a role/cluster role, the rules associated with the role"},
 			  {"ka.req.service.type", "When the request object refers to a service, the service type"},
 			  {"ka.req.service.ports", "When the request object refers to a service, the service's ports. Can be indexed (e.g. ka.req.service.ports[0]). Without any index, returns all ports"},
 			  {"ka.req.volume.hostpath", "If the request object contains volume definitions, whether or not a hostPath volume exists that mounts the specified path from the host (...hostpath[/etc]=true if a volume mounts /etc from the host). The index can be a glob, in which case all volumes are considered to find any path matching the specified glob (...hostpath[/usr/*] would match either /usr/local or /usr/bin)"},
@@ -564,11 +583,15 @@ k8s_audit_filter_check::k8s_audit_filter_check()
 			{"ka.target.namespace", {"/objectRef/namespace"_json_pointer}},
 			{"ka.target.resource", {"/objectRef/resource"_json_pointer}},
 			{"ka.target.subresource", {"/objectRef/subresource"_json_pointer}},
+			{"ka.req.binding.subjects", {"/requestObject/subjects"_json_pointer}},
+			{"ka.req.binding.subject.has_name", {"/requestObject/subjects"_json_pointer, index_has_name, a::IDX_REQUIRED, a::IDX_KEY}},
+			{"ka.req.binding.role", {"/requestObject/roleRef/name"_json_pointer}},
 			{"ka.req.configmap.name", {"/objectRef/name"_json_pointer}},
 			{"ka.req.configmap.obj", {"/requestObject/data"_json_pointer}},
 			{"ka.req.container.image", {"/requestObject/spec/containers"_json_pointer, index_image, a::IDX_ALLOWED, a::IDX_NUMERIC}},
 			{"ka.req.container.image.repository", {"/requestObject/spec/containers"_json_pointer, index_image, a::IDX_ALLOWED, a::IDX_NUMERIC}},
 			{"ka.req.container.privileged", {"/requestObject/spec/containers"_json_pointer, index_privileged, a::IDX_ALLOWED, a::IDX_NUMERIC}},
+			{"ka.req.role.rules", {"/requestObject/rules"_json_pointer}},
 			{"ka.req.service.type", {"/requestObject/spec/type"_json_pointer}},
 			{"ka.req.service.ports", {"/requestObject/spec/ports"_json_pointer, index_generic, a::IDX_ALLOWED, a::IDX_NUMERIC}},
 			{"ka.req.volume.hostpath", {"/requestObject/spec/volumes"_json_pointer, check_hostpath_vols, a::IDX_REQUIRED, a::IDX_KEY}},
