@@ -131,6 +131,15 @@
   source: k8s_audit
   tags: [k8s]
 
+# Corresponds to K8s CIS Benchmark 1.7.4
+- rule: Start HostNetwork Pod
+  desc: Detect an attempt to start a pod using the host network.
+  condition: kevt and pod and create and ka.req.container.host_network=true and not ka.req.container.image.repository in (trusted_k8s_containers)
+  output: Pod started using host network (user=%ka.user.name pod=%ka.resp.name ns=%ka.target.namespace image=%ka.req.container.image)
+  priority: WARNING
+  source: k8s_audit
+  tags: [k8s]
+
 - rule: Create NodePort Service
   desc: >
     Detect an attempt to start a service with a NodePort service type
