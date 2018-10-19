@@ -233,7 +233,7 @@
 # Detect any attempt to create a ClusterRoleBinding to the cluster-admin user
 # (exapand this to any built-in cluster role that does "sensitive" things)
 - rule: Attach to cluster-admin role
-  desc: detect any attempt to create a ClusterRoleBinding to the cluster-admin user
+  desc: Detect any attempt to create a ClusterRoleBinding to the cluster-admin user
   condition: kevt and clusterrolebinding and create and ka.req.binding.role=cluster-admin
   output: Cluster Role Binding to cluster-admin role (user=%ka.user.name subject=%ka.req.binding.subjects)
   priority: WARNING
