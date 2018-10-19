@@ -419,7 +419,6 @@ std::string k8s_audit_filter_check::index_has_name(const json &j, std::string &f
 {
 	for(auto &subject : j)
 	{
-		fprintf(stderr, "foo2\n");
 		if(subject.value("name", "N/A") == idx)
 		{
 			return string("true");
