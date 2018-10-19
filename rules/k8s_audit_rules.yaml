@@ -248,7 +248,7 @@
   source: k8s_audit
   tags: [k8s]
 
-- macro: writeable_verbs
+- macro: writable_verbs
   condition: >
     (ka.req.role.rules.verbs contains create or
      ka.req.role.rules.verbs contains update or
