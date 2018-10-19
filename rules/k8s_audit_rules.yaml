@@ -235,12 +235,18 @@
 - rule: Attach to cluster-admin role
   desc: detect any attempt to create a ClusterRoleBinding to the cluster-admin user
   condition: kevt and clusterrolebinding and create and ka.req.binding.role=cluster-admin
-  output: Binding to cluster-admin role (user=%ka.user.name subject=%ka.req.binding.subjects)
+  output: Cluster Role Binding to cluster-admin role (user=%ka.user.name subject=%ka.req.binding.subjects)
   priority: WARNING
   source: k8s_audit
   tags: [k8s]
 
-# Creating a cluster role that does "sensitive" things.
+- rule: ClusterRole with Wildcard
+  desc: detect any attempt to create a Role/ClusterRole with wildcard resources or verbs
+  condition: kevt and (role or clusterrole) and create and (ka.req.role.rules.resources contains '"*"' or ka.req.role.rules.verbs contains '"*"')
+  output: Created Role/ClusterRole with wildcard (user=%ka.user.name role=%ka.target.name rules=%ka.req.role.rules)
+  priority: WARNING
+  source: k8s_audit
+  tags: [k8s]
 
 # The rules below this point are less discriminatory and generally
 # represent a stream of activity for a cluster. If you wish to disable
