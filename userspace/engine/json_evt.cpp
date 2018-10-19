@@ -17,6 +17,8 @@ limitations under the License.
 
 */
 
+#include <ctype.h>
+
 #include "utils.h"
 #include "uri.h"
 
@@ -118,7 +120,10 @@ int32_t json_event_filter_check::parse_field_name(const char *str, bool alloc_st
 
 	for(auto &pair : m_aliases)
 	{
+		// What follows the match must not be alphanumeric or a dot
 		if(strncmp(pair.first.c_str(), str, pair.first.size()) == 0 &&
+		   !isalnum((int) str[pair.first.size()]) &&
+		   str[pair.first.size()] != '.' &&
 		   pair.first.size() > match_len)
 		{
 			m_jptr = pair.second.m_jptr;
