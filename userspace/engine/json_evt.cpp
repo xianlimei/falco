@@ -501,7 +501,7 @@ std::string k8s_audit_filter_check::index_select(const json &j, std::string &fie
 			}
 
 			try {
-				ret += json_event_filter_check::json_as_string(obj[prop]);
+				ret += json_event_filter_check::json_as_string(obj.at(prop));
 			}
 			catch(json::out_of_range &e)
 			{
