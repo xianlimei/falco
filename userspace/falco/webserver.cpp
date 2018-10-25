@@ -96,6 +96,20 @@ bool k8s_audit_handler::handleGet(CivetServer *server, struct mg_connection *con
 	return true;
 }
 
+// The version in CivetServer.cpp has valgrind compliants due to
+// unguarded initialization of c++ string from buffer.
+static void get_post_data(struct mg_connection *conn, std::string &postdata)
+{
+        mg_lock_connection(conn);
+        char buf[2048];
+        int r = mg_read(conn, buf, sizeof(buf));
+        while (r > 0) {
+                postdata.append(buf, r);
+                r = mg_read(conn, buf, sizeof(buf));
+        }
+        mg_unlock_connection(conn);
+}
+
 bool k8s_audit_handler::handlePost(CivetServer *server, struct mg_connection *conn)
 {
 	// Ensure that the content-type is application/json
@@ -108,7 +122,8 @@ bool k8s_audit_handler::handlePost(CivetServer *server, struct mg_connection *co
 		return true;
 	}
 
-	std::string post_data = server->getPostData(conn);
+	std::string post_data;
+	get_post_data(conn, post_data);
 	std::string errstr;
 
 	if(!accept_uploaded_data(post_data, errstr))
