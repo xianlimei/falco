@@ -1,0 +1,80 @@
+#
+# Copyright (C) 2016-2018 Draios Inc dba Sysdig.
+#
+# This file is part of falco.
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#
+trace_files: !mux
+
+  user_outside_allowed_set:
+    detect: True
+    detect_level: WARNING
+    rules_file:
+      - ../rules/k8s_audit_rules.yaml
+      - ./rules/k8s_audit/allow_namespace_foo.yaml
+    detect_counts:
+      - Disallowed K8s User: 1
+    trace_file: trace_files/k8s_audit/some-user_creates_namespace_foo.json
+
+  user_in_allowed_set:
+    detect: False
+    rules_file:
+      - ../rules/k8s_audit_rules.yaml
+      - ./rules/k8s_audit/allow_namespace_foo.yaml
+      - ./rules/k8s_audit/allow_user_some-user.yaml
+      - ./rules/k8s_audit/disallow_kactivity.yaml
+    trace_file: trace_files/k8s_audit/some-user_creates_namespace_foo.json
+
+  # Pod outside of allowed set--should detect
+  create_disallowed_pod:
+    detect: True
+    detect_level: WARNING
+    rules_file:
+      - ../rules/k8s_audit_rules.yaml
+      - ./rules/k8s_audit/allow_only_apache_container.yaml
+    detect_counts:
+      - Start Disallowed Pod: 1
+    trace_file: trace_files/k8s_audit/create_nginx_pod_unprivileged.json
+
+  # Pod in allowed set--should not detect
+
+  # For each of privileged, sensitive mount, host network:
+  #  - Start pod w/ property--should detect
+  #  - Start same pod w/o property--should not detect
+  #  - Start allowed pod w/ property--should not detect
+  #  - Start same allowed pod w/o property--should not detect
+
+  # Create NodePort Service--should detect
+
+  # Create Service w/ ClusterIP--should not detect
+
+  # Create ConfigMap w/ each disallowed string--should detect
+
+  # Create ConfigMap w/o any disallowed string--should not detect
+
+  # Request from the anonymous user--should detect
+
+  # Exec to pod--should detect
+
+  # Attach to pod--should detect
+
+  # Create namespace outside allowed set--should detect
+
+  # Create namespace in allowed set--should not detect
+
+  # Create a pod in kube-system namespace--should detect
+
+  # Create pod in kube-
+
+
