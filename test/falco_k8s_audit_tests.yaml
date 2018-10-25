@@ -36,7 +36,6 @@ trace_files: !mux
       - ./rules/k8s_audit/disallow_kactivity.yaml
     trace_file: trace_files/k8s_audit/some-user_creates_namespace_foo.json
 
-  # Pod outside of allowed set--should detect
   create_disallowed_pod:
     detect: True
     detect_level: WARNING
@@ -47,7 +46,60 @@ trace_files: !mux
       - Start Disallowed Pod: 1
     trace_file: trace_files/k8s_audit/create_nginx_pod_unprivileged.json
 
-  # Pod in allowed set--should not detect
+  create_allowed_pod:
+    detect: False
+    rules_file:
+      - ../rules/k8s_audit_rules.yaml
+      - ./rules/k8s_audit/allow_nginx_container.yaml
+    trace_file: trace_files/k8s_audit/create_nginx_pod_unprivileged.json
+
+  create_privileged_pod:
+    detect: True
+    detect_level: WARNING
+    rules_file:
+      - ../rules/k8s_audit_rules.yaml
+    detect_counts:
+      - Start Privileged Pod: 1
+    trace_file: trace_files/k8s_audit/create_nginx_pod_privileged.json
+
+  create_privileged_2nd_container_pod:
+    detect: True
+    detect_level: WARNING
+    rules_file:
+      - ../rules/k8s_audit_rules.yaml
+    detect_counts:
+      - Start Privileged Pod: 1
+    trace_file: trace_files/k8s_audit/create_nginx_pod_privileged_2nd_container.json
+
+  create_unprivileged_pod:
+    detect: False
+    rules_file:
+      - ../rules/k8s_audit_rules.yaml
+    trace_file: trace_files/k8s_audit/create_nginx_pod_unprivileged.json
+
+  create_sensitive_mount_pod:
+    detect: True
+    detect_level: WARNING
+    rules_file:
+      - ../rules/k8s_audit_rules.yaml
+    detect_counts:
+      - Start Sensitive Mount Pod: 1
+    trace_file: trace_files/k8s_audit/create_nginx_pod_sensitive_mount.json
+
+  create_sensitive_mount_2nd_container_pod:
+    detect: True
+    detect_level: WARNING
+    rules_file:
+      - ../rules/k8s_audit_rules.yaml
+    detect_counts:
+      - Start Sensitive Mount Pod: 1
+    trace_file: trace_files/k8s_audit/create_nginx_pod_sensitive_mount_2nd_container.json
+
+  create_unsensitive_mount_pod:
+    detect: False
+    rules_file:
+      - ../rules/k8s_audit_rules.yaml
+    trace_file: trace_files/k8s_audit/create_nginx_pod_unsensitive_mount.json
 
   # For each of privileged, sensitive mount, host network:
   #  - Start pod w/ property--should detect
