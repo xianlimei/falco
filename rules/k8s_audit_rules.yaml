@@ -180,12 +180,18 @@
 # Roughly corresponds to K8s CIS Benchmark, 1.1.12. In this case,
 # notifies an attempt to exec/attach to a privileged container.
 
-- rule: Attach/Exec Privileged Pod
+# Ideally, we'd add a more stringent rule that detects attaches/execs
+# to a privileged pod, but that requires the engine for k8s audit
+# events to be stateful, so it could know if a container named in an
+# attach request was created privileged or not. For now, we have a
+# less severe rule that detects attaches/execs to any pod.
+
+- rule: Attach/Exec Pod
   desc: >
-    Detect any attempt to attach/exec to a privileged pod
+    Detect any attempt to attach/exec to a pod
   condition: kevt_started and pod_subresource and create and ka.target.subresource in (exec,attach)
-  output: Attach/Exec to privileged pod (user=%ka.user.name pod=%ka.target.name ns=%ka.target.namespace action=%ka.target.subresource command=%ka.uri.param[command])
-  priority: WARNING
+  output: Attach/Exec to pod (user=%ka.user.name pod=%ka.target.name ns=%ka.target.namespace action=%ka.target.subresource command=%ka.uri.param[command])
+  priority: NOTICE
   source: k8s_audit
   tags: [k8s]
 
