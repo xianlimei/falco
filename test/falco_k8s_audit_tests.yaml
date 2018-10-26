@@ -43,7 +43,7 @@ trace_files: !mux
       - ../rules/k8s_audit_rules.yaml
       - ./rules/k8s_audit/allow_only_apache_container.yaml
     detect_counts:
-      - Start Disallowed Pod: 1
+      - Create Disallowed Pod: 1
     trace_file: trace_files/k8s_audit/create_nginx_pod_unprivileged.json
 
   create_allowed_pod:
@@ -59,7 +59,7 @@ trace_files: !mux
     rules_file:
       - ../rules/k8s_audit_rules.yaml
     detect_counts:
-      - Start Privileged Pod: 1
+      - Create Privileged Pod: 1
     trace_file: trace_files/k8s_audit/create_nginx_pod_privileged.json
 
   create_privileged_2nd_container_pod:
@@ -68,7 +68,7 @@ trace_files: !mux
     rules_file:
       - ../rules/k8s_audit_rules.yaml
     detect_counts:
-      - Start Privileged Pod: 1
+      - Create Privileged Pod: 1
     trace_file: trace_files/k8s_audit/create_nginx_pod_privileged_2nd_container.json
 
   create_privileged_trusted_pod:
@@ -97,7 +97,7 @@ trace_files: !mux
     rules_file:
       - ../rules/k8s_audit_rules.yaml
     detect_counts:
-      - Start Sensitive Mount Pod: 1
+      - Create Sensitive Mount Pod: 1
     trace_file: trace_files/k8s_audit/create_nginx_pod_sensitive_mount.json
 
   create_sensitive_mount_2nd_container_pod:
@@ -106,7 +106,7 @@ trace_files: !mux
     rules_file:
       - ../rules/k8s_audit_rules.yaml
     detect_counts:
-      - Start Sensitive Mount Pod: 1
+      - Create Sensitive Mount Pod: 1
     trace_file: trace_files/k8s_audit/create_nginx_pod_sensitive_mount_2nd_container.json
 
   create_sensitive_mount_trusted_pod:
@@ -135,7 +135,7 @@ trace_files: !mux
     rules_file:
       - ../rules/k8s_audit_rules.yaml
     detect_counts:
-      - Start HostNetwork Pod: 1
+      - Create HostNetwork Pod: 1
     trace_file: trace_files/k8s_audit/create_nginx_pod_hostnetwork.json
 
   create_hostnetwork_trusted_pod:

@@ -80,7 +80,7 @@
 - macro: health_endpoint
   condition: ka.uri=/healthz
 
-- rule: Start Disallowed Pod
+- rule: Create Disallowed Pod
   desc: >
     Detect an attempt to start a pod with a container image outside of a list of allowed images.
   condition: kevt and pod and create and not allowed_k8s_containers
@@ -104,7 +104,7 @@
     docker/ucp-agent,
     gliderlabs/logspout]
 
-- rule: Start Privileged Pod
+- rule: Create Privileged Pod
   desc: >
     Detect an attempt to start a pod with a privileged container
   condition: kevt and pod and create and ka.req.container.privileged=true and not ka.req.container.image.repository in (trusted_k8s_containers)
@@ -121,7 +121,7 @@
      ka.req.volume.hostpath[/etc]=true or
      ka.req.volume.hostpath[/root*]=true)
 
-- rule: Start Sensitive Mount Pod
+- rule: Create Sensitive Mount Pod
   desc: >
     Detect an attempt to start a pod with a volume from a sensitive host directory (i.e. /proc).
     Exceptions are made for known trusted images.
@@ -132,7 +132,7 @@
   tags: [k8s]
 
 # Corresponds to K8s CIS Benchmark 1.7.4
-- rule: Start HostNetwork Pod
+- rule: Create HostNetwork Pod
   desc: Detect an attempt to start a pod using the host network.
   condition: kevt and pod and create and ka.req.container.host_network=true and not ka.req.container.image.repository in (trusted_k8s_containers)
   output: Pod started using host network (user=%ka.user.name pod=%ka.resp.name ns=%ka.target.namespace image=%ka.req.container.image)
