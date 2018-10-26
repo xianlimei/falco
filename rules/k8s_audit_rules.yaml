@@ -327,7 +327,7 @@
   source: k8s_audit
   tags: [k8s]
 
-- rule: K8s Configmap Deleted
+- rule: K8s ConfigMap Deleted
   desc: Detect any attempt to delete a configmap
   condition: (kactivity and delete and configmap and response_successful)
   output: K8s ConfigMap Deleted (user=%ka.user.name configmap=%ka.target.name ns=%ka.target.namespace resp=%ka.response.code decision=%ka.auth.decision reason=%ka.auth.reason)

@@ -213,4 +213,130 @@ trace_files: !mux
 
   # Create pod in kube-
 
+  create_deployment:
+    detect: True
+    detect_level: INFO
+    rules_file:
+      - ../rules/k8s_audit_rules.yaml
+    detect_counts:
+      - K8s Deployment Created: 1
+    trace_file: trace_files/k8s_audit/create_deployment.json
 
+  delete_deployment:
+    detect: True
+    detect_level: INFO
+    rules_file:
+      - ../rules/k8s_audit_rules.yaml
+    detect_counts:
+      - K8s Deployment Deleted: 1
+    trace_file: trace_files/k8s_audit/delete_deployment.json
+
+  create_service:
+    detect: True
+    detect_level: INFO
+    rules_file:
+      - ../rules/k8s_audit_rules.yaml
+    detect_counts:
+      - K8s Service Created: 1
+    trace_file: trace_files/k8s_audit/create_service.json
+
+  delete_service:
+    detect: True
+    detect_level: INFO
+    rules_file:
+      - ../rules/k8s_audit_rules.yaml
+    detect_counts:
+      - K8s Service Deleted: 1
+    trace_file: trace_files/k8s_audit/delete_service.json
+
+  create_configmap:
+    detect: True
+    detect_level: INFO
+    rules_file:
+      - ../rules/k8s_audit_rules.yaml
+    detect_counts:
+      - K8s ConfigMap Created: 1
+    trace_file: trace_files/k8s_audit/create_configmap.json
+
+  delete_configmap:
+    detect: True
+    detect_level: INFO
+    rules_file:
+      - ../rules/k8s_audit_rules.yaml
+    detect_counts:
+      - K8s ConfigMap Deleted: 1
+    trace_file: trace_files/k8s_audit/delete_configmap.json
+
+  create_namespace:
+    detect: True
+    detect_level: INFO
+    rules_file:
+      - ../rules/k8s_audit_rules.yaml
+      - ./rules/k8s_audit/allow_namespace_foo.yaml
+      - ./rules/k8s_audit/allow_user_some-user.yaml
+    detect_counts:
+      - K8s Namespace Created: 1
+    trace_file: trace_files/k8s_audit/some-user_creates_namespace_foo.json
+
+  delete_namespace:
+    detect: True
+    detect_level: INFO
+    rules_file:
+      - ../rules/k8s_audit_rules.yaml
+    detect_counts:
+      - K8s Namespace Deleted: 1
+    trace_file: trace_files/k8s_audit/delete_namespace_foo.json
+
+  create_serviceaccount:
+    detect: True
+    detect_level: INFO
+    rules_file:
+      - ../rules/k8s_audit_rules.yaml
+    detect_counts:
+      - K8s Serviceaccount Created: 1
+    trace_file: trace_files/k8s_audit/create_serviceaccount.json
+
+  delete_serviceaccount:
+    detect: True
+    detect_level: INFO
+    rules_file:
+      - ../rules/k8s_audit_rules.yaml
+    detect_counts:
+      - K8s Serviceaccount Deleted: 1
+    trace_file: trace_files/k8s_audit/delete_serviceaccount.json
+
+  create_clusterrole:
+    detect: True
+    detect_level: INFO
+    rules_file:
+      - ../rules/k8s_audit_rules.yaml
+    detect_counts:
+      - K8s Role/Clusterrole Created: 1
+    trace_file: trace_files/k8s_audit/create_clusterrole.json
+
+  delete_clusterrole:
+    detect: True
+    detect_level: INFO
+    rules_file:
+      - ../rules/k8s_audit_rules.yaml
+    detect_counts:
+      - K8s Role/Clusterrole Deleted: 1
+    trace_file: trace_files/k8s_audit/delete_clusterrole.json
+
+  create_clusterrolebinding:
+    detect: True
+    detect_level: INFO
+    rules_file:
+      - ../rules/k8s_audit_rules.yaml
+    detect_counts:
+      - K8s Role/Clusterrolebinding Created: 1
+    trace_file: trace_files/k8s_audit/create_clusterrolebinding.json
+
+  delete_clusterrolebinding:
+    detect: True
+    detect_level: INFO
+    rules_file:
+      - ../rules/k8s_audit_rules.yaml
+    detect_counts:
+      - K8s Role/Clusterrolebinding Deleted: 1
+    trace_file: trace_files/k8s_audit/delete_clusterrolebinding.json
