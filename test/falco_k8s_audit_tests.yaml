@@ -175,11 +175,22 @@ trace_files: !mux
       - ./rules/k8s_audit/disallow_kactivity.yaml
     trace_file: trace_files/k8s_audit/create_nginx_service_nonodeport.json
 
-  # Create Service w/ ClusterIP--should not detect
+  create_configmap_private_creds:
+    detect: True
+    detect_level: WARNING
+    rules_file:
+      - ../rules/k8s_audit_rules.yaml
+      - ./rules/k8s_audit/disallow_kactivity.yaml
+    detect_counts:
+      - Create/Modify Configmap With Private Credentials: 6
+    trace_file: trace_files/k8s_audit/create_configmap_sensitive_values.json
 
-  # Create ConfigMap w/ each disallowed string--should detect
-
-  # Create ConfigMap w/o any disallowed string--should not detect
+  create_configmap_no_private_creds:
+    detect: False
+    rules_file:
+      - ../rules/k8s_audit_rules.yaml
+      - ./rules/k8s_audit/disallow_kactivity.yaml
+    trace_file: trace_files/k8s_audit/create_configmap_no_sensitive_values.json
 
   # Request from the anonymous user--should detect
 
