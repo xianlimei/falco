@@ -158,7 +158,22 @@ trace_files: !mux
       - ./rules/k8s_audit/trust_nginx_container.yaml
     trace_file: trace_files/k8s_audit/create_nginx_pod_nohostnetwork.json
 
-  # Create NodePort Service--should detect
+  create_nodeport_service:
+    detect: True
+    detect_level: WARNING
+    rules_file:
+      - ../rules/k8s_audit_rules.yaml
+      - ./rules/k8s_audit/disallow_kactivity.yaml
+    detect_counts:
+      - Create NodePort Service: 1
+    trace_file: trace_files/k8s_audit/create_nginx_service_nodeport.json
+
+  create_nonodeport_service:
+    detect: False
+    rules_file:
+      - ../rules/k8s_audit_rules.yaml
+      - ./rules/k8s_audit/disallow_kactivity.yaml
+    trace_file: trace_files/k8s_audit/create_nginx_service_nonodeport.json
 
   # Create Service w/ ClusterIP--should not detect
 
