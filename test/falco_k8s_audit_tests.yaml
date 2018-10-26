@@ -71,10 +71,24 @@ trace_files: !mux
       - Start Privileged Pod: 1
     trace_file: trace_files/k8s_audit/create_nginx_pod_privileged_2nd_container.json
 
+  create_privileged_trusted_pod:
+    detect: False
+    rules_file:
+      - ../rules/k8s_audit_rules.yaml
+      - ./rules/k8s_audit/trust_nginx_container.yaml
+    trace_file: trace_files/k8s_audit/create_nginx_pod_privileged.json
+
   create_unprivileged_pod:
     detect: False
     rules_file:
       - ../rules/k8s_audit_rules.yaml
+    trace_file: trace_files/k8s_audit/create_nginx_pod_unprivileged.json
+
+  create_unprivileged_trusted_pod:
+    detect: False
+    rules_file:
+      - ../rules/k8s_audit_rules.yaml
+      - ./rules/k8s_audit/trust_nginx_container.yaml
     trace_file: trace_files/k8s_audit/create_nginx_pod_unprivileged.json
 
   create_sensitive_mount_pod:
@@ -95,17 +109,54 @@ trace_files: !mux
       - Start Sensitive Mount Pod: 1
     trace_file: trace_files/k8s_audit/create_nginx_pod_sensitive_mount_2nd_container.json
 
+  create_sensitive_mount_trusted_pod:
+    detect: False
+    rules_file:
+      - ../rules/k8s_audit_rules.yaml
+      - ./rules/k8s_audit/trust_nginx_container.yaml
+    trace_file: trace_files/k8s_audit/create_nginx_pod_sensitive_mount.json
+
   create_unsensitive_mount_pod:
     detect: False
     rules_file:
       - ../rules/k8s_audit_rules.yaml
     trace_file: trace_files/k8s_audit/create_nginx_pod_unsensitive_mount.json
 
-  # For each of privileged, sensitive mount, host network:
-  #  - Start pod w/ property--should detect
-  #  - Start same pod w/o property--should not detect
-  #  - Start allowed pod w/ property--should not detect
-  #  - Start same allowed pod w/o property--should not detect
+  create_unsensitive_mount_trusted_pod:
+    detect: False
+    rules_file:
+      - ../rules/k8s_audit_rules.yaml
+      - ./rules/k8s_audit/trust_nginx_container.yaml
+    trace_file: trace_files/k8s_audit/create_nginx_pod_unsensitive_mount.json
+
+  create_hostnetwork_pod:
+    detect: True
+    detect_level: WARNING
+    rules_file:
+      - ../rules/k8s_audit_rules.yaml
+    detect_counts:
+      - Start HostNetwork Pod: 1
+    trace_file: trace_files/k8s_audit/create_nginx_pod_hostnetwork.json
+
+  create_hostnetwork_trusted_pod:
+    detect: False
+    rules_file:
+      - ../rules/k8s_audit_rules.yaml
+      - ./rules/k8s_audit/trust_nginx_container.yaml
+    trace_file: trace_files/k8s_audit/create_nginx_pod_hostnetwork.json
+
+  create_nohostnetwork_pod:
+    detect: False
+    rules_file:
+      - ../rules/k8s_audit_rules.yaml
+    trace_file: trace_files/k8s_audit/create_nginx_pod_nohostnetwork.json
+
+  create_nohostnetwork_trusted_pod:
+    detect: False
+    rules_file:
+      - ../rules/k8s_audit_rules.yaml
+      - ./rules/k8s_audit/trust_nginx_container.yaml
+    trace_file: trace_files/k8s_audit/create_nginx_pod_nohostnetwork.json
 
   # Create NodePort Service--should detect
 
