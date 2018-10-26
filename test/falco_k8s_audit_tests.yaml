@@ -201,17 +201,140 @@ trace_files: !mux
       - Anonymous Request Allowed: 1
     trace_file: trace_files/k8s_audit/anonymous_creates_namespace_foo.json
 
-  # Exec to pod--should detect
+  pod_exec:
+    detect: True
+    detect_level: NOTICE
+    rules_file:
+      - ../rules/k8s_audit_rules.yaml
+    detect_counts:
+      - Attach/Exec Pod: 1
+    trace_file: trace_files/k8s_audit/exec_pod.json
 
-  # Attach to pod--should detect
+  pod_attach:
+    detect: True
+    detect_level: NOTICE
+    rules_file:
+      - ../rules/k8s_audit_rules.yaml
+    detect_counts:
+      - Attach/Exec Pod: 1
+    trace_file: trace_files/k8s_audit/attach_pod.json
 
-  # Create namespace outside allowed set--should detect
+  namespace_outside_allowed_set:
+    detect: True
+    detect_level: WARNING
+    rules_file:
+      - ../rules/k8s_audit_rules.yaml
+      - ./rules/k8s_audit/allow_user_some-user.yaml
+    detect_counts:
+      - Create Disallowed Namespace: 1
+    trace_file: trace_files/k8s_audit/some-user_creates_namespace_foo.json
 
-  # Create namespace in allowed set--should not detect
+  namespace_in_allowed_set:
+    detect: False
+    rules_file:
+      - ../rules/k8s_audit_rules.yaml
+      - ./rules/k8s_audit/allow_namespace_foo.yaml
+      - ./rules/k8s_audit/disallow_kactivity.yaml
+    trace_file: trace_files/k8s_audit/minikube_creates_namespace_foo.json
 
-  # Create a pod in kube-system namespace--should detect
+  create_pod_in_kube_system_namespace:
+    detect: True
+    detect_level: WARNING
+    rules_file:
+      - ../rules/k8s_audit_rules.yaml
+    detect_counts:
+      - Pod Created in Kube Namespace: 1
+    trace_file: trace_files/k8s_audit/create_pod_kube_system_namespace.json
 
-  # Create pod in kube-
+  create_pod_in_kube_public_namespace:
+    detect: True
+    detect_level: WARNING
+    rules_file:
+      - ../rules/k8s_audit_rules.yaml
+    detect_counts:
+      - Pod Created in Kube Namespace: 1
+    trace_file: trace_files/k8s_audit/create_pod_kube_public_namespace.json
+
+  create_serviceaccount_in_kube_system_namespace:
+    detect: True
+    detect_level: WARNING
+    rules_file:
+      - ../rules/k8s_audit_rules.yaml
+    detect_counts:
+      - Service Account Created in Kube Namespace: 1
+    trace_file: trace_files/k8s_audit/create_serviceaccount_kube_system_namespace.json
+
+  create_serviceaccount_in_kube_public_namespace:
+    detect: True
+    detect_level: WARNING
+    rules_file:
+      - ../rules/k8s_audit_rules.yaml
+    detect_counts:
+      - Service Account Created in Kube Namespace: 1
+    trace_file: trace_files/k8s_audit/create_serviceaccount_kube_public_namespace.json
+
+  system_clusterrole_deleted:
+    detect: True
+    detect_level: WARNING
+    rules_file:
+      - ../rules/k8s_audit_rules.yaml
+    detect_counts:
+      - System ClusterRole Modified/Deleted: 1
+    trace_file: trace_files/k8s_audit/delete_cluster_role_kube_aggregator.json
+
+  system_clusterrole_modified:
+    detect: True
+    detect_level: WARNING
+    rules_file:
+      - ../rules/k8s_audit_rules.yaml
+    detect_counts:
+      - System ClusterRole Modified/Deleted: 1
+    trace_file: trace_files/k8s_audit/modify_cluster_role_node_problem_detector.json
+
+  attach_cluster_admin_role:
+    detect: True
+    detect_level: WARNING
+    rules_file:
+      - ../rules/k8s_audit_rules.yaml
+    detect_counts:
+      - Attach to cluster-admin Role: 1
+    trace_file: trace_files/k8s_audit/attach_cluster_admin_role.json
+
+  create_cluster_role_wildcard_resources:
+    detect: True
+    detect_level: WARNING
+    rules_file:
+      - ../rules/k8s_audit_rules.yaml
+    detect_counts:
+      - ClusterRole With Wildcard Created: 1
+    trace_file: trace_files/k8s_audit/create_cluster_role_wildcard_resources.json
+
+  create_cluster_role_wildcard_verbs:
+    detect: True
+    detect_level: WARNING
+    rules_file:
+      - ../rules/k8s_audit_rules.yaml
+    detect_counts:
+      - ClusterRole With Wildcard Created: 1
+    trace_file: trace_files/k8s_audit/create_cluster_role_wildcard_verbs.json
+
+  create_writable_cluster_role:
+    detect: True
+    detect_level: NOTICE
+    rules_file:
+      - ../rules/k8s_audit_rules.yaml
+    detect_counts:
+      - ClusterRole With Write Privileges Created: 1
+    trace_file: trace_files/k8s_audit/create_cluster_role_write_privileges.json
+
+  create_pod_exec_cluster_role:
+    detect: True
+    detect_level: WARNING
+    rules_file:
+      - ../rules/k8s_audit_rules.yaml
+    detect_counts:
+      - ClusterRole With Pod Exec Created: 1
+    trace_file: trace_files/k8s_audit/create_cluster_role_pod_exec.json
 
   create_deployment:
     detect: True
