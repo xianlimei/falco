@@ -192,7 +192,14 @@ trace_files: !mux
       - ./rules/k8s_audit/disallow_kactivity.yaml
     trace_file: trace_files/k8s_audit/create_configmap_no_sensitive_values.json
 
-  # Request from the anonymous user--should detect
+  anonymous_user:
+    detect: True
+    detect_level: WARNING
+    rules_file:
+      - ../rules/k8s_audit_rules.yaml
+    detect_counts:
+      - Anonymous Request Allowed: 1
+    trace_file: trace_files/k8s_audit/anonymous_creates_namespace_foo.json
 
   # Exec to pod--should detect
 
