@@ -99,7 +99,7 @@ static void usage()
 	   " -L                            Show the name and description of all rules and exit.\n"
 	   " -l <rule>                     Show the name and description of the rule with name <rule> and exit.\n"
 	   " --list [<source>]             List all defined fields. If <source> is provided, only list those fields for\n"
-	   "                               the source <source>. Current values for <source> are \"sinsp\", \"k8s_audit\"\n"
+	   "                               the source <source>. Current values for <source> are \"syscall\", \"k8s_audit\"\n"
 	   " -m <url[,marathon_url]>, --mesos-api=<url[,marathon_url]>\n"
 	   "                               Enable Mesos support by connecting to the API server\n"
 	   "                               specified as argument. E.g. \"http://admin:password@127.0.0.1:5050\".\n"
@@ -382,11 +382,11 @@ static void list_falco_fields(falco_engine *engine)
 static void list_source_fields(falco_engine *engine, bool verbose, std::string &source)
 {
 	if(source.size() > 0 &&
-	   !(source == "sinsp" || source == "k8s_audit"))
+	   !(source == "syscall" || source == "k8s_audit"))
 	{
-		throw std::invalid_argument("Value for --list must be \"sinsp\" or \"k8s_audit\"");
+		throw std::invalid_argument("Value for --list must be \"syscall\" or \"k8s_audit\"");
 	}
-	if(source == "" || source == "sinsp")
+	if(source == "" || source == "syscall")
 	{
 		list_fields(verbose, false);
 	}

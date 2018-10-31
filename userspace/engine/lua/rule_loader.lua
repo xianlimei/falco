@@ -218,7 +218,7 @@ function load_rules(sinsp_lua_parser,
       if (v['macro']) then
 
 	 if v['source'] == nil then
-	    v['source'] = "sinsp"
+	    v['source'] = "syscall"
 	 end
 
 	 if state.macros_by_name[v['macro']] == nil then
@@ -293,7 +293,7 @@ function load_rules(sinsp_lua_parser,
 	 end
 
 	 if v['source'] == nil then
-	    v['source'] = "sinsp"
+	    v['source'] = "syscall"
 	 end
 
 	 -- Possibly append to the condition field of an existing rule
@@ -388,7 +388,7 @@ function load_rules(sinsp_lua_parser,
 
       local ast = compiler.compile_macro(v['condition'], state.macros, state.lists)
 
-      if v['source'] == "sinsp" then
+      if v['source'] == "syscall" then
 	 if not all_events then
 	    sinsp_rule_utils.check_for_ignored_syscalls_events(ast, 'macro', v['condition'])
 	 end
@@ -412,7 +412,7 @@ function load_rules(sinsp_lua_parser,
       local evtttypes = {}
       local syscallnums = {}
 
-      if v['source'] == "sinsp" then
+      if v['source'] == "syscall" then
 	 if not all_events then
 	    sinsp_rule_utils.check_for_ignored_syscalls_events(filter_ast, 'rule', v['rule'])
 	 end
@@ -460,7 +460,7 @@ function load_rules(sinsp_lua_parser,
 	 if (v['tags'] == nil) then
 	    v['tags'] = {}
 	 end
-	 if v['source'] == "sinsp" then
+	 if v['source'] == "syscall" then
 	    install_filter(filter_ast.filter.value, filter, sinsp_lua_parser)
 	    -- Pass the filter and event types back up
 	    falco_rules.add_filter(rules_mgr, v['rule'], evttypes, syscallnums, v['tags'])

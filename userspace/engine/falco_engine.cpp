@@ -214,7 +214,7 @@ unique_ptr<falco_engine::rule_result> falco_engine::process_sinsp_event(sinsp_ev
 		res->evt = ev;
 		const char *p =  lua_tostring(m_ls, -3);
 		res->rule = p;
-		res->source = "sinsp";
+		res->source = "syscall";
 		res->priority_num = (falco_common::priority_type) lua_tonumber(m_ls, -2);
 		res->format = lua_tostring(m_ls, -1);
 		lua_pop(m_ls, 3);

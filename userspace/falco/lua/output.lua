@@ -149,7 +149,7 @@ function output_event(event, rule, source, priority, priority_num, format)
       format = format:sub(2)
    end
 
-   if source == "sinsp" then
+   if source == "syscall" then
       format = "*%evt.time: "..priority.." "..format
    else
       format = "*%jevt.time: "..priority.." "..format

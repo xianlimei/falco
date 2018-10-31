@@ -64,7 +64,7 @@ int falco_formats::formatter(lua_State *ls)
 
 	try
 	{
-		if(source == "sinsp")
+		if(source == "syscall")
 		{
 			sinsp_evt_formatter* formatter;
 			formatter = new sinsp_evt_formatter(s_inspector, format);
@@ -100,7 +100,7 @@ int falco_formats::free_formatter(lua_State *ls)
 
 	string source = luaL_checkstring(ls, -2);
 
-	if(source == "sinsp")
+	if(source == "syscall")
 	{
 		sinsp_evt_formatter *formatter = (sinsp_evt_formatter *) lua_topointer(ls, -1);
 		delete(formatter);
@@ -145,7 +145,7 @@ int falco_formats::format_event (lua_State *ls)
 
 	string sformat = format;
 
-	if(strcmp(source, "sinsp") == 0)
+	if(strcmp(source, "syscall") == 0)
 	{
 		try {
 			s_formatters->tostring((sinsp_evt *) evt, sformat, &line);
